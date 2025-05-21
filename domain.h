@@ -1,101 +1,90 @@
 #pragma once
 
+#include <algorithm>
+#include <array>
 #include <iostream>
 #include <stdexcept>
 
-enum class NBase
-{
-    A,
-    C,
-    G,
-    T,
-    U
-};
+enum class Nucleotide { Adenine, Cytosine, Guanine, Thymine, Uracil };
 
-NBase CharToNBase(char ch)
-{
-    switch (ch)
-    {
+std::ostream& operator<<(std::ostream& os, Nucleotide nucleotide) {
+  switch (nucleotide) {
+    case Nucleotide::Adenine:
+      os << 'A';
+      break;
+    case Nucleotide::Cytosine:
+      os << 'C';
+      break;
+    case Nucleotide::Guanine:
+      os << 'G';
+      break;
+    case Nucleotide::Thymine:
+      os << 'T';
+      break;
+    case Nucleotide::Uracil:
+      os << 'U';
+      break;
+  }
+  return os;
+}
+
+Nucleotide CharToNucleotide(char ch) {
+  switch (std::toupper(ch)) {
     case 'A':
-        return NBase::A;
-        break;
+      return Nucleotide::Adenine;
+      break;
     case 'C':
-        return NBase::C;
-        break;
+      return Nucleotide::Cytosine;
+      break;
     case 'G':
-        return NBase::G;
-        break;
+      return Nucleotide::Guanine;
+      break;
     case 'T':
-        return NBase::T;
-        break;
+      return Nucleotide::Thymine;
+      break;
     case 'U':
-        return NBase::U;
+      return Nucleotide::Uracil;
     default:
-        throw std::out_of_range("char is not in the list of appropriate N bases");
-    }
+      throw std::out_of_range("char is not in the list of appropriate N bases");
+  }
 }
 
-NBase CodingToMatrix(NBase coding_nbase)
-{
-    switch (coding_nbase)
-    {
-    case NBase::A:
-        return NBase::T;
-        break;
-    case NBase::C:
-        return NBase::G;
-        break;
-    case NBase::G:
-        return NBase::C;
-        break;
-    case NBase::T:
-        return NBase::A;
-        break;
+Nucleotide EncodeToMatrix(Nucleotide nucleotide) {
+  switch (nucleotide) {
+    case Nucleotide::Adenine:
+      return Nucleotide::Thymine;
+      break;
+    case Nucleotide::Cytosine:
+      return Nucleotide::Guanine;
+      break;
+    case Nucleotide::Guanine:
+      return Nucleotide::Cytosine;
+      break;
+    case Nucleotide::Thymine:
+      return Nucleotide::Adenine;
+      break;
     default:
-        throw std::logic_error("invalid base to convert from coding to matrix sequence");
-    }
+      throw std::logic_error(
+          "invalid nucleotide to convert from coding to matrix sequence");
+  }
 }
 
-NBase MatrixBaseToRBase(NBase matrix_base)
-{
-    switch (matrix_base)
-    {
-    case NBase::A:
-        return NBase::U;
-        break;
-    case NBase::C:
-        return NBase::G;
-        break;
-    case NBase::G:
-        return NBase::C;
-        break;
-    case NBase::T:
-        return NBase::A;
-        break;
+static Nucleotide EncodeToRNA(Nucleotide nucleotide) {
+  switch (nucleotide) {
+    case Nucleotide::Adenine:
+      return Nucleotide::Uracil;
+      break;
+    case Nucleotide::Cytosine:
+      return Nucleotide::Guanine;
+      break;
+    case Nucleotide::Guanine:
+      return Nucleotide::Cytosine;
+      break;
+    case Nucleotide::Thymine:
+      return Nucleotide::Adenine;
+      break;
     default:
-        throw std::logic_error("invalid base to convert from matrix to rnk sequence");
-    }
-}
-
-std::ostream &operator<<(std::ostream &os, NBase nbase)
-{
-    switch (nbase)
-    {
-    case NBase::A:
-        os << 'A';
-        break;
-    case NBase::C:
-        os << 'C';
-        break;
-    case NBase::G:
-        os << 'G';
-        break;
-    case NBase::T:
-        os << 'T';
-        break;
-    case NBase::U:
-        os << 'U';
-        break;
-    }
-    return os;
+      throw std::logic_error(
+          "invalid base to convert from matrix to rnk sequence");
+  }
 }

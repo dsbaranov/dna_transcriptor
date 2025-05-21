@@ -1,83 +1,59 @@
-#include "domain.h"
-#include "log_duration.h"
-#include "sequence.h"
 #include <cassert>
 #include <iostream>
-#include <sstream>
+#include <string>
+#include "codone.h"
+#include "domain.h"
+
 using namespace std;
 
-void CTOR_FromStream()
-{
-    LOG_DURATION("CTOR_FromStream");
-    cout << "CTOR_FromStream"s;
-    std::stringstream fake_in("ACGT"s);
-    Sequence sequence(fake_in);
-    Sequence::BaseSequence comp_sequence{NBase::A, NBase::C, NBase::G, NBase::T};
-    try
-    {
-        assert(sequence.GetCodingSequence() == comp_sequence);
-    }
-    catch (...)
-    {
-        cout << " FAILED"s << endl;
-    }
-    cout << " PASSED"s << endl;
+template <typename Lambda>
+void Test(const std::string& name, Lambda& function) {
+  cout << "TEST "s << name << " ";
+  function();
+  cout << "SUCCESS" << endl;
 }
 
-void CTOR_FromString()
-{
-    LOG_DURATION("CTOR_FromString");
-    cout << "CTOR_FromString"s;
-    std::string fake_str("ACGT"s);
-    Sequence sequence(fake_str);
-    Sequence::BaseSequence comp_sequence{NBase::A, NBase::C, NBase::G, NBase::T};
-    try
-    {
-        assert(sequence.GetCodingSequence() == comp_sequence);
-    }
-    catch (...)
-    {
-        cout << " FAILED"s << endl;
-    }
-    cout << " PASSED"s << endl;
+void Codone_CTOR_Nucleotids() {
+  Codone::codone ideal_codone{Nucleotide::Adenine, Nucleotide::Cytosine,
+                              Nucleotide::Guanine};
+  Codone test_codone(Nucleotide::Adenine, Nucleotide::Cytosine,
+                     Nucleotide::Guanine);
+  assert(test_codone.Get() == ideal_codone);
 }
 
-void TEST_Sequences()
-{
-    LOG_DURATION("TEST_Sequences");
-    cout << "TEST_Sequences"s;
-    std::string fake_str("ACGT"s);
-    Sequence sequence(fake_str);
-    Sequence::BaseSequence comp_ctor_sequence{NBase::A, NBase::C, NBase::G, NBase::T};
-    Sequence::BaseSequence comp_matrix_sequence{NBase::T, NBase::G, NBase::C, NBase::A};
-    Sequence::BaseSequence comp_rnk_sequence{NBase::A, NBase::C, NBase::G, NBase::U};
-    try
-    {
-        assert(sequence.GetCodingSequence() == comp_ctor_sequence);
-        assert(sequence.GetMatrixSequence() == comp_matrix_sequence);
-        assert(sequence.GetRNKSequence() == comp_rnk_sequence);
-    }
-    catch (...)
-    {
-        cout << " FAILED"s << endl;
-    }
-    cout << " PASSED"s << endl;
+void Codone_CTOR_String() {
+  Codone::codone ideal_codone{Nucleotide::Adenine, Nucleotide::Guanine,
+                              Nucleotide::Thymine};
+  Codone test_codone("AGT"s);
+  assert(test_codone.Get() == ideal_codone);
 }
 
-void ExecuteTests()
-{
-    CTOR_FromStream();
-    CTOR_FromString();
-    TEST_Sequences();
+void Codone_CTOR_String_FALSE() {
+  bool false_result_size = false;
+  {
+    try {
+      Codone test_codone("AGTC");
+    } catch (...) {
+      false_result_size = true;
+    }
+  }
+  bool false_result_signature = false;
+  {
+    try {
+      Codone test_codone("ABC");
+    } catch (...) {
+      false_result_signature = true;
+    }
+  }
+  assert(false_result_size && false_result_signature);
 }
 
-int main()
-{
-    ExecuteTests();
-    cout << "DNA:" << endl;
-    Sequence seq(std::cin);
-    cout << "MATRIX :"s << std::endl;
-    cout << seq.GetMatrixSequence() << endl;
-    cout << "RNA :"s << std::endl;
-    cout << seq.GetRNKSequence() << endl;
+void CodoneTests() {
+  Test("Codone_CTOR_Nucleoids", Codone_CTOR_Nucleotids);
+  Test("Codone_CTOR_String", Codone_CTOR_String);
+  Test("Codone_CTOR_String_FALSE", Codone_CTOR_String_FALSE);
+}
+
+int main() {
+  CodoneTests();
 }
