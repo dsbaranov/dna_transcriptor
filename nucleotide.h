@@ -3,121 +3,143 @@
 #include <memory>
 #include <stdexcept>
 
-enum class NucleotideType { Adenine, Cytosine, Guanine, Thymine, Uracil };
-
-std::ostream& operator<<(std::ostream& os, const NucleotideType& type) {
-  char c;
-  switch (type) {
-    case NucleotideType::Adenine:
-      c = 'A';
-      break;
-    case NucleotideType::Cytosine:
-      c = 'C';
-      break;
-    case NucleotideType::Guanine:
-      c = 'G';
-      break;
-    case NucleotideType::Thymine:
-      c = 'T';
-      break;
-    case NucleotideType::Uracil:
-      c = 'U';
-      break;
-  }
-  return os << c;
-}
-
 class Nucleotide {
  public:
-  Nucleotide(char c)
-      : type_(std::make_unique<NucleotideType>(ParseFromChar(c))) {}
+  enum class Type { Adenine, Cytosine, Guanine, Thymine, Uracil };
 
-  Nucleotide(NucleotideType type)
-      : type_(std::make_unique<NucleotideType>(type)) {}
+  Nucleotide(char c) : type_(std::make_unique<Type>(ParseFromChar(c))) {}
+
+  Nucleotide(Type type) : type_(std::make_unique<Type>(type)) {}
 
   Nucleotide(const Nucleotide& other)
-      : type_(std::make_unique<NucleotideType>(*(other.type_))) {}
+      : type_(std::make_unique<Type>(*(other.type_))) {}
   Nucleotide& operator=(const Nucleotide& other) {
-    type_ = std::make_unique<NucleotideType>(*(other.type_));
+    type_ = std::make_unique<Type>(*(other.type_));
     return *this;
   }
-  Nucleotide(Nucleotide&& other) : type_(std::move(other.type_)) {
-    other.type_.release();
+  Nucleotide(Nucleotide&& other) {
+    if (other.IsNull()) {
+      throw std::logic_error("Move ctor other is uninitialized");
+    }
+    type_ = std::move(other.type_);
   }
   Nucleotide& operator=(Nucleotide&& other) {
+    if (other.IsNull()) {
+      throw std::logic_error("Move operator= other is uninitialized");
+    }
     type_ = std::move(other.type_);
-    other.type_.release();
     return *this;
   }
 
-  static NucleotideType ParseFromChar(char c) {
-    switch (std::toupper(c)) {
+  static Type ParseFromChar(char c) {
+    if (!isalpha(c)) {
+      throw std::logic_error("ParseFromChar can't parse : char is not letter");
+    }
+    if (!isupper(c)) {
+      c = std::toupper(c);
+    }
+    switch (c) {
       case 'A':
-        return NucleotideType::Adenine;
+        return Type::Adenine;
         break;
       case 'C':
-        return NucleotideType::Cytosine;
+        return Type::Cytosine;
         break;
       case 'G':
-        return NucleotideType::Guanine;
+        return Type::Guanine;
         break;
       case 'T':
-        return NucleotideType::Thymine;
-        break;
-      case 'U':
-        return NucleotideType::Uracil;
+        return Type::Thymine;
         break;
       default:
-        throw std::logic_error("Недопустимый символ");
+        throw std::logic_error("inaproppriate symbol");
     }
   }
 
   Nucleotide& ToMatrix() {
     if (!type_) {
-      throw std::runtime_error("Нуклеотид не инициализирован");
+      throw std::runtime_error("ToMatrix of uninitialized is forbidden");
     }
     switch (*type_) {
-      case NucleotideType::Adenine:
-        *type_ = NucleotideType::Thymine;
+      case Type::Adenine:
+        *type_ = Type::Thymine;
         break;
-      case NucleotideType::Cytosine:
-        *type_ = NucleotideType::Guanine;
+      case Type::Cytosine:
+        *type_ = Type::Guanine;
         break;
-      case NucleotideType ::Guanine:
-        *type_ = NucleotideType::Cytosine;
+      case Type ::Guanine:
+        *type_ = Type::Cytosine;
         break;
-      case NucleotideType::Thymine:
-        *type_ = NucleotideType::Adenine;
+      case Type::Thymine:
+        *type_ = Type::Adenine;
         break;
       default:  // in case of inapropriate U
-        throw std::logic_error("Недопустимый тип нуклеотида");
+        throw std::logic_error("forbidden Type");
     }
     return *this;
   }
 
   Nucleotide& ToRNA() {
     if (!type_) {
-      throw std::runtime_error("Нуклеотид не инициализирован");
+      throw std::runtime_error("ToRNA of uninitialized is forbidden");
     }
     switch (*type_) {
-      case NucleotideType::Adenine:
-        *type_ = NucleotideType::Uracil;
+      case Type::Adenine:
+        *type_ = Type::Uracil;
         break;
-      case NucleotideType::Cytosine:
-        *type_ = NucleotideType::Guanine;
+      case Type::Cytosine:
+        *type_ = Type::Guanine;
         break;
-      case NucleotideType ::Guanine:
-        *type_ = NucleotideType::Cytosine;
+      case Type ::Guanine:
+        *type_ = Type::Cytosine;
         break;
-      case NucleotideType::Thymine:
-        *type_ = NucleotideType::Adenine;
+      case Type::Thymine:
+        *type_ = Type::Adenine;
         break;
       default:  // in case of inapropriate U
-        throw std::logic_error("Недопустимый тип нуклеотида");
+        throw std::logic_error("forbidden Type");
     }
     return *this;
   }
 
+  Type& Get() {
+    if (!type_) {
+      throw std::runtime_error("Get() of uninitialized Nucleotide forbidden");
+    }
+    return *type_;
+  }
+  Type& Get() const {
+    if (!type_) {
+      throw std::runtime_error(
+          "Get() const of uninitialized Nucleotide forbidden");
+    }
+    return *type_;
+  }
+
+  bool IsNull() { return type_ == nullptr; }
+
  private:
-  std::unique_ptr<NucleotideType> type_ = nullptr;
+  std::unique_ptr<Type> type_ = nullptr;
 };
+
+std::ostream& operator<<(std::ostream& os, const Nucleotide::Type& type) {
+  char c;
+  switch (type) {
+    case Nucleotide::Type::Adenine:
+      c = 'A';
+      break;
+    case Nucleotide::Type::Cytosine:
+      c = 'C';
+      break;
+    case Nucleotide::Type::Guanine:
+      c = 'G';
+      break;
+    case Nucleotide::Type::Thymine:
+      c = 'T';
+      break;
+    case Nucleotide::Type::Uracil:
+      c = 'U';
+      break;
+  }
+  return os << c;
+}
