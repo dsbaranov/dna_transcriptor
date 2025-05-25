@@ -19,6 +19,32 @@ class Codone
         assert(codone_string.size() == 3u);
     }
 
+    Codone(const Codone &other) : triplet_(other.triplet_)
+    {
+    }
+
+    Codone &operator=(const Codone &other)
+    {
+        triplet_ = other.triplet_;
+        return (*this);
+    }
+
+    Codone(Codone &&other)
+    {
+        for (uint8_t index = 0; index < 3; index++)
+        {
+            triplet_[index] = std::move(other.triplet_[index]);
+        }
+    }
+
+    Codone &operator=(Codone &&other)
+    {
+        for (uint8_t index = 0; index < 3; index++)
+        {
+            triplet_[index] = std::move(other.triplet_[index]);
+        }
+    }
+
     Codone &ToMatrix()
     {
         for (Nucleotide &nucleotide : triplet_)
