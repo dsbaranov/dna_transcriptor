@@ -13,10 +13,21 @@ class Codone
     {
     }
 
+    // Codone(Nucleotide &&first, Nucleotide &&second, Nucleotide &&third)
+    //     : triplet_{std::move(first), std::move(second), std::move(third)}
+    // {
+    // }
+
     Codone(const std::string &codone_string)
-        : triplet_({{codone_string.at(0)}, codone_string.at(1), {codone_string.at(2)}})
     {
-        assert(codone_string.size() == 3u);
+        if (codone_string.size() != 3)
+        {
+            throw std::logic_error("codone string size must be 3");
+        }
+        for (uint8_t index(0); index < 3; index++)
+        {
+            triplet_[index] = {codone_string[index]};
+        }
     }
 
     Codone(const Codone &other) : triplet_(other.triplet_)
@@ -29,21 +40,22 @@ class Codone
         return (*this);
     }
 
-    Codone(Codone &&other)
-    {
-        for (uint8_t index = 0; index < 3; index++)
-        {
-            triplet_[index] = std::move(other.triplet_[index]);
-        }
-    }
+    // Codone(Codone &&other)
+    // {
+    //     for (uint8_t index = 0; index < 3; index++)
+    //     {
+    //         triplet_[index] = std::move(other.triplet_[index]);
+    //     }
+    // }
 
-    Codone &operator=(Codone &&other)
-    {
-        for (uint8_t index = 0; index < 3; index++)
-        {
-            triplet_[index] = std::move(other.triplet_[index]);
-        }
-    }
+    // Codone &operator=(Codone &&other)
+    // {
+    //     for (uint8_t index = 0; index < 3; index++)
+    //     {
+    //         triplet_[index] = std::move(other.triplet_[index]);
+    //     }
+    //     return *this;
+    // }
 
     Codone &ToMatrix()
     {
@@ -98,4 +110,9 @@ std::ostream &operator<<(std::ostream &os, const Codone &codone)
 {
     os << codone.at(0) << codone.at(1) << codone.at(2);
     return os;
+}
+
+bool operator==(const Codone &left, const Codone &right)
+{
+    return left.at(0) == right.at(0) && left.at(1) == right.at(1) && left.at(2) == right.at(2);
 }

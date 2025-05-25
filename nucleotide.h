@@ -39,21 +39,21 @@ class Nucleotide
         }
         return *this;
     }
-    Nucleotide(Nucleotide &&other)
-    {
-        if (!other.IsNull())
-        {
-            type_ = std::move(other.type_);
-        }
-    }
-    Nucleotide &operator=(Nucleotide &&other)
-    {
-        if (!other.IsNull())
-        {
-            type_ = std::move(other.type_);
-        }
-        return *this;
-    }
+    // Nucleotide(Nucleotide &&other)
+    // {
+    //     if (!other.IsNull())
+    //     {
+    //         type_ = std::move(other.type_);
+    //     }
+    // }
+    // Nucleotide &operator=(Nucleotide &&other)
+    // {
+    //     if (!other.IsNull())
+    //     {
+    //         type_ = std::move(other.type_);
+    //     }
+    //     return *this;
+    // }
 
     static Type ParseFromChar(char c)
     {
@@ -187,6 +187,16 @@ std::ostream &operator<<(std::ostream &os, const Nucleotide::Type &type)
         break;
     }
     return os << c;
+}
+
+bool operator==(const Nucleotide &left, const Nucleotide &right)
+{
+    return (left.IsNull() && right.IsNull()) || (left.Get() == right.Get());
+}
+
+bool operator==(const Nucleotide &left, Nucleotide::Type type)
+{
+    return (!left.IsNull()) && (left.Get() == type);
 }
 
 std::ostream &operator<<(std::ostream &os, const Nucleotide &nucleotide)

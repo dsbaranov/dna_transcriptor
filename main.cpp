@@ -1,9 +1,12 @@
+#include "./tests/codone.h"
+#include "./tests/nucleotide.h"
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "./tests/nucleotide.h"
 using namespace std;
 
-int main() {
-  TESTUNIT_Nucleotide();
+int main()
+{
+    test::nucleotide::UNIT_TEST_Nucleotide();
+    test::codone::UNIT_TEST_Codone();
 }
