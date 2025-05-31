@@ -37,6 +37,32 @@ class Sequence
         return *this;
     }
 
+    const Codone &at(size_t index) const
+    {
+        if (index >= sequence_.size())
+        {
+            throw std::out_of_range("index out of Sequence bounds");
+        }
+        return sequence_.at(index);
+    }
+
+    Codone &operator[](size_t index)
+    {
+        if (index >= sequence_.size())
+        {
+            throw std::out_of_range("index out of Sequnece bounds");
+        }
+        return sequence_[index];
+    }
+    const Codone &operator[](size_t index) const
+    {
+        if (index >= sequence_.size())
+        {
+            throw std::out_of_range("index out of Sequnece bounds");
+        }
+        return sequence_[index];
+    }
+
   private:
     std::vector<Codone> sequence_;
 };
