@@ -55,24 +55,24 @@ void OPERATOR_COPY()
     assert(!first.IsNull() && !second.IsNull());
     assert(first.Get() == second.Get());
 }
-// void CTOR_MOVE()
-// {
-//     Nucleotide first(Nucleotide::Type::Adenine);
-//     Nucleotide second(std::move(first));
-//     assert(first.IsNull());
-//     bool uninit_get_impossible = false;
-//     try
-//     {
-//         [[maybe_unused]] Nucleotide::Type type = first.Get();
-//     }
-//     catch (std::runtime_error &)
-//     {
-//         uninit_get_impossible = true;
-//     }
-//     assert(uninit_get_impossible);
-//     assert(!second.IsNull());
-//     assert(second.Get() == Nucleotide::Type::Adenine);
-// }
+void CTOR_MOVE()
+{
+    Nucleotide first(Nucleotide::Type::Adenine);
+    Nucleotide second(std::move(first));
+    assert(first.IsNull());
+    bool uninit_get_impossible = false;
+    try
+    {
+        [[maybe_unused]] Nucleotide::Type type = first.Get();
+    }
+    catch (std::runtime_error &)
+    {
+        uninit_get_impossible = true;
+    }
+    assert(uninit_get_impossible);
+    assert(!second.IsNull());
+    assert(second.Get() == Nucleotide::Type::Adenine);
+}
 
 void UNIT_TEST_Nucleotide()
 {
@@ -84,6 +84,6 @@ void UNIT_TEST_Nucleotide()
     TestLambda("CTOR_FromType", CTOR_FromType);
     TestLambda("CTOR_COPY", CTOR_COPY);
     TestLambda("OPERATOR_COPY", OPERATOR_COPY);
-    // TestLambda("CTOR_MOVE", CTOR_MOVE);
+    TestLambda("CTOR_MOVE", CTOR_MOVE);
 }
 } // namespace test::nucleotide

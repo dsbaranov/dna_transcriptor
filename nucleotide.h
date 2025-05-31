@@ -39,21 +39,21 @@ class Nucleotide
         }
         return *this;
     }
-    // Nucleotide(Nucleotide &&other)
-    // {
-    //     if (!other.IsNull())
-    //     {
-    //         type_ = std::move(other.type_);
-    //     }
-    // }
-    // Nucleotide &operator=(Nucleotide &&other)
-    // {
-    //     if (!other.IsNull())
-    //     {
-    //         type_ = std::move(other.type_);
-    //     }
-    //     return *this;
-    // }
+    Nucleotide(Nucleotide &&other)
+    {
+        if (!other.IsNull())
+        {
+            type_ = std::move(other.type_);
+        }
+    }
+    Nucleotide &operator=(Nucleotide &&other)
+    {
+        if (!other.IsNull())
+        {
+            type_ = std::move(other.type_);
+        }
+        return *this;
+    }
 
     static Type ParseFromChar(char c)
     {

@@ -13,10 +13,10 @@ class Codone
     {
     }
 
-    // Codone(Nucleotide &&first, Nucleotide &&second, Nucleotide &&third)
-    //     : triplet_{std::move(first), std::move(second), std::move(third)}
-    // {
-    // }
+    Codone(Nucleotide &&first, Nucleotide &&second, Nucleotide &&third)
+        : triplet_{std::move(first), std::move(second), std::move(third)}
+    {
+    }
 
     Codone(const std::string &codone_string)
     {
@@ -40,22 +40,22 @@ class Codone
         return (*this);
     }
 
-    // Codone(Codone &&other)
-    // {
-    //     for (uint8_t index = 0; index < 3; index++)
-    //     {
-    //         triplet_[index] = std::move(other.triplet_[index]);
-    //     }
-    // }
+    Codone(Codone &&other)
+    {
+        for (uint8_t index = 0; index < 3; index++)
+        {
+            triplet_[index] = std::move(other.triplet_[index]);
+        }
+    }
 
-    // Codone &operator=(Codone &&other)
-    // {
-    //     for (uint8_t index = 0; index < 3; index++)
-    //     {
-    //         triplet_[index] = std::move(other.triplet_[index]);
-    //     }
-    //     return *this;
-    // }
+    Codone &operator=(Codone &&other)
+    {
+        for (uint8_t index = 0; index < 3; index++)
+        {
+            triplet_[index] = std::move(other.triplet_[index]);
+        }
+        return *this;
+    }
 
     Codone &ToMatrix()
     {

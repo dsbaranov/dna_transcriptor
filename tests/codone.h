@@ -17,13 +17,13 @@ void CTOR_Nucleotides()
         assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
         assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
     }
-    // {
-    //     Codone codone(std::move(first), std::move(second), std::move(third));
-    //     assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
-    //     assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
-    //     assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
-    //     assert(first.IsNull() && second.IsNull() && third.IsNull());
-    // }
+    {
+        Codone codone(std::move(first), std::move(second), std::move(third));
+        assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
+        assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
+        assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
+        assert(first.IsNull() && second.IsNull() && third.IsNull());
+    }
 }
 
 void CTOR_String()
@@ -67,25 +67,25 @@ void OPERATOR_COPY()
     assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
 }
 
-// void CTOR_MOVE()
-// {
-//     Codone source("ACG");
-//     Codone codone(std::move(source));
-//     assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
-//     assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
-//     assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
-//     assert(source.at(0).IsNull() && source.at(1).IsNull() && source.at(2).IsNull());
-// }
+void CTOR_MOVE()
+{
+    Codone source("ACG");
+    Codone codone(std::move(source));
+    assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
+    assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
+    assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
+    assert(source.at(0).IsNull() && source.at(1).IsNull() && source.at(2).IsNull());
+}
 
-// void OPERATOR_MOVE()
-// {
-//     Codone source("ACG");
-//     Codone codone = std::move(source);
-//     assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
-//     assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
-//     assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
-//     assert(source.at(0).IsNull() && source.at(1).IsNull() && source.at(2).IsNull());
-// }
+void OPERATOR_MOVE()
+{
+    Codone source("ACG");
+    Codone codone = std::move(source);
+    assert(codone.at(0).Get() == Nucleotide::Type::Adenine);
+    assert(codone.at(1).Get() == Nucleotide::Type::Cytosine);
+    assert(codone.at(2).Get() == Nucleotide::Type::Guanine);
+    assert(source.at(0).IsNull() && source.at(1).IsNull() && source.at(2).IsNull());
+}
 
 void TO_MATRIX()
 {
@@ -159,8 +159,8 @@ void UNIT_TEST_Codone()
     TestLambda("CTOR_Wrong_String", CTOR_Wrong_String);
     TestLambda("CTOR_COPY", CTOR_COPY);
     TestLambda("OPERATOR_COPY", OPERATOR_COPY);
-    // TestLambda("CTOR_MOVE", CTOR_MOVE);
-    // TestLambda("OPERATOR_MOVE", OPERATOR_MOVE);
+    TestLambda("CTOR_MOVE", CTOR_MOVE);
+    TestLambda("OPERATOR_MOVE", OPERATOR_MOVE);
     TestLambda("TO_MATRIX", TO_MATRIX);
     TestLambda("TO_WRONG_MATRIX", TO_WRONG_MATRIX);
     TestLambda("TO_RNA", TO_RNA);
