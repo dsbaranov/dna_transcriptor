@@ -8,31 +8,31 @@ class Sequence
   public:
     Sequence() = delete;
 
-    Sequence(const std::string &str_sequence)
+    Sequence([[maybe_unused]] const std::string &str_sequence)
     {
     }
-    Sequence(std::iostream &is)
-    {
-    }
-
-    Sequence(const Sequence &other)
+    Sequence([[maybe_unused]] std::iostream &is)
     {
     }
 
-    Sequence(std::vector<Nucleotide::Type> &&type_sequence)
+    Sequence([[maybe_unused]] const Sequence &other)
     {
     }
 
-    Sequence &operator=(const Sequence &other)
+    Sequence([[maybe_unused]] std::vector<Nucleotide::Type> &&type_sequence)
+    {
+    }
+
+    Sequence &operator=([[maybe_unused]] const Sequence &other)
     {
         return *this;
     }
 
-    Sequence(Sequence &&other)
+    Sequence([[maybe_unused]] Sequence &&other)
     {
     }
 
-    Sequence &operator=(Sequence &&other)
+    Sequence &operator=([[maybe_unused]] Sequence &&other)
     {
         return *this;
     }
@@ -63,6 +63,19 @@ class Sequence
         return sequence_[index];
     }
 
+    bool empty() const
+    {
+        return sequence_.empty();
+    }
+
   private:
+    std::vector<Codone> FromString(std::string &&str_sequence)
+    {
+    }
+
+    std::vector<Codone> FromStream()
+    {
+    }
+
     std::vector<Codone> sequence_;
 };
