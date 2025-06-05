@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "codone.h"
+#include "codone_describer.h"
 class Sequence {
  public:
   using Iterator = Codone*;
@@ -37,6 +38,26 @@ class Sequence {
     std::for_each(sequence_.begin(), sequence_.end(),
                   [](Codone& codone) { codone.ToRNA(); });
     return *this;
+  }
+
+  void SerializeRNAWithDesctiption(std::ostream& os,
+                                   bool eng = true,
+                                   size_t codones_per_row = 10) const {
+    for (auto codone_it = sequence_.begin(); codone_it != sequence_.end();
+         codone_it++) {
+      os << *codone_it << " "s;
+      size_t dst = std::distance(sequence_.begin(), codone_it);
+      if ((dst % codones_per_row == 0) && dst != 0) {
+        os << std::endl;
+        for (auto desc_codone_it = codone_it - codones_per_row;
+             desc_codone_it != next(codone_it); desc_codone_it++) {
+          os << (eng ? CodoneDescriber::DescribeAsEnString(*desc_codone_it)
+                     : CodoneDescriber::DescribeAsRuString(*desc_codone_it))
+             << " "s;
+        }
+        os << std::endl;
+      }
+    }
   }
 
   const Codone& at(size_t index) const {

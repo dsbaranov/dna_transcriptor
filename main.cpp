@@ -15,7 +15,7 @@ int main() {
   {
     cout << "main"s << endl;
     {
-      stringstream ss(test::details::GenerateRandomStringSequece(999u));
+      stringstream ss(test::details::GenerateRandomStringSequece(99u));
       Sequence seq(ss);
       {
         LOG_DURATION("Base");
@@ -28,6 +28,10 @@ int main() {
       {
         LOG_DURATION("ToRNA");
         cout << "RNA:    "s << seq.ToRNA() << endl;
+      }
+      {
+        LOG_DURATION("DESCRIPTION");
+        seq.SerializeRNAWithDesctiption(std::cout, false, 10u);
       }
     }
   }
